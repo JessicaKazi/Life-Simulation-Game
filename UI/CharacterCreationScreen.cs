@@ -16,7 +16,7 @@ public class CharacterCreationScreen : Screen
 
     private string _name = "";
     private int _genderIndex = 0;
-    private readonly string[] _genders = { "Female", "Male", "Non-binary" };
+    private readonly string[] _genders = { "Female", "Male" };
 
     private readonly Personality[] _allTraits = (Personality[])Enum.GetValues(typeof(Personality));
     private readonly List<int> _selectedTraits = new();
