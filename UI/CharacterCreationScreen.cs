@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using LifeGame.Core;
 using LifeGame.Entities;
-using GameScreen = LifeGame.Core.GameScreen;
+using GameScreen = global::LifeGame.Core.Screen;
 
 namespace LifeGame.UI;
 

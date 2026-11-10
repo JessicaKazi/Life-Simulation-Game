@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using LifeGame.Core;
 using LifeGame.UI;
-using GameScreen = global::LifeGame.Core.GameScreen;
+using GameScreen = global::LifeGame.Core.Screen;
 
 namespace LifeGame;
 
@@ -45,6 +45,7 @@ public class LifeGame : Game
         {
             GameScreen.MainMenu          => _screen is MainMenuScreen          ? _screen : new MainMenuScreen(_state, _font),
             GameScreen.CharacterCreation => _screen is CharacterCreationScreen ? _screen : new CharacterCreationScreen(_state, _font),
+            GameScreen.LoadGame          => _screen is LoadGameScreen          ? _screen : new LoadGameScreen(_state, _font),
             GameScreen.InGame            => _screen is InGameHudScreen         ? _screen : new InGameHudScreen(_state, _font, _pixel),
             _ => _screen
         };
