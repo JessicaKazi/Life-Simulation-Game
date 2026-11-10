@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "dgSpecHash": "6of/gcapV6g=",
+  "success": true,
+  "projectFilePath": "/home/Jessicakapila/Life.exe/LifeGame/LifeGame.csproj",
+  "expectedPackageFiles": [
+    "/home/Jessicakapila/.nuget/packages/monogame.content.builder.task/3.8.6.1/monogame.content.builder.task.3.8.6.1.nupkg.sha512",
+    "/home/Jessicakapila/.nuget/packages/monogame.framework.desktopgl/3.8.6.1/monogame.framework.desktopgl.3.8.6.1.nupkg.sha512",
+    "/home/Jessicakapila/.nuget/packages/monogame.library.openal/1.24.3.4/monogame.library.openal.1.24.3.4.nupkg.sha512",
+    "/home/Jessicakapila/.nuget/packages/monogame.library.sdl/2.32.10.2/monogame.library.sdl.2.32.10.2.nupkg.sha512",
+    "/home/Jessicakapila/.nuget/packages/nvorbis/0.10.4/nvorbis.0.10.4.nupkg.sha512",
+    "/home/Jessicakapila/.nuget/packages/system.memory/4.5.3/system.memory.4.5.3.nupkg.sha512",
+    "/home/Jessicakapila/.nuget/packages/system.valuetuple/4.5.0/system.valuetuple.4.5.0.nupkg.sha512",
+    "/home/Jessicakapila/.nuget/packages/microsoft.netcore.app.ref/9.0.20/microsoft.netcore.app.ref.9.0.20.nupkg.sha512",
+    "/home/Jessicakapila/.nuget/packages/microsoft.aspnetcore.app.ref/9.0.20/microsoft.aspnetcore.app.ref.9.0.20.nupkg.sha512",
+    "/home/Jessicakapila/.nuget/packages/microsoft.netcore.app.host.linux-x64/9.0.20/microsoft.netcore.app.host.linux-x64.9.0.20.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,0 +1,14 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch LifeGame",
+      "type": "coreclr",
+      "request": "launch",
+      "program": "${workspaceFolder}/LifeGame/bin/Debug/net9.0/LifeGame.dll",
+      "cwd": "${workspaceFolder}/LifeGame",
+      "console": "integratedTerminal",
+      "stopAtEntry": false
+    }
+  ]
+}

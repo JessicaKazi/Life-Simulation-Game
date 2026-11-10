@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SourceFile>/home/Jessicakapila/Life.exe/LifeGame/Content/DefaultFont.spritefont</SourceFile>
+  <SourceTime>2026-11-10T12:04:00.2882263+02:00</SourceTime>
+  <DestFile>/home/Jessicakapila/Life.exe/LifeGame/Content/bin/DesktopGL/Content/DefaultFont.xnb</DestFile>
+  <DestTime>2026-11-10T12:04:11.202278+02:00</DestTime>
+  <Importer>FontDescriptionImporter</Importer>
+  <ImporterTime>2026-11-04T02:14:02+02:00</ImporterTime>
+  <Processor>FontDescriptionProcessor</Processor>
+  <ProcessorTime>2026-11-04T02:14:02+02:00</ProcessorTime>
+  <Dependencies />
+  <BuildAsset />
+  <BuildOutput />
+</PipelineBuildEvent>
