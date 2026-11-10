@@ -40,17 +40,29 @@ public class LifeGame : Game
 
     protected override void Update(GameTime gameTime)
     {
-        // Swap screen if state changed
-        _screen = _state.CurrentScreen switch
-        {
-            GameScreen.MainMenu          => _screen is MainMenuScreen          ? _screen : new MainMenuScreen(_state, _font),
-            GameScreen.CharacterCreation => _screen is CharacterCreationScreen ? _screen : new CharacterCreationScreen(_state, _font),
-            GameScreen.LoadGame          => _screen is LoadGameScreen          ? _screen : new LoadGameScreen(_state, _font),
-            GameScreen.InGame            => _screen is InGameHudScreen         ? _screen : new InGameHudScreen(_state, _font, _pixel),
-            _ => _screen
-        };
-
         _screen.Update(gameTime);
+
+        var desired = _state.CurrentScreen;
+        var needsSwitch =
+            (desired == GameScreen.MainMenu          && _screen is not MainMenuScreen) ||
+            (desired == GameScreen.CharacterCreation && _screen is not CharacterCreationScreen) ||
+            (desired == GameScreen.LoadGame          && _screen is not LoadGameScreen) ||
+            (desired == GameScreen.InGame            && _screen is not InGameHudScreen) ||
+            (desired == GameScreen.JobBoard          && _screen is not JobBoardScreen);
+
+        if (needsSwitch)
+        {
+            _screen = desired switch
+            {
+                GameScreen.MainMenu          => new MainMenuScreen(_state, _font),
+                GameScreen.CharacterCreation => new CharacterCreationScreen(_state, _font),
+                GameScreen.LoadGame          => new LoadGameScreen(_state, _font),
+                GameScreen.InGame            => new InGameHudScreen(_state, _font, _pixel),
+                GameScreen.JobBoard          => new JobBoardScreen(_state, _font),
+                _                        => _screen
+            };
+        }
+
         base.Update(gameTime);
     }
 

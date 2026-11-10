@@ -14,13 +14,35 @@ public class TimeSystem
     {
         float elapsedHours = realSeconds * 2f / 60f;
         Hour += elapsedHours;
-        while (Hour >= 24f) { Hour -= 24f; Day++; }
+
+        while (Hour >= 24f)
+        {
+            Hour -= 24f;
+            Day++;
+            if (Day > 30)
+            {
+                Day = 1;
+                Year++;
+            }
+        }
+
         OnHoursElapsed?.Invoke(elapsedHours);
     }
 
     public void SetTime(int year, int day, float hour)
     {
-        Year = year; Day = day; Hour = hour;
+        Year = year;
+        Day  = day;
+        Hour = hour;
+    }
+
+    public (int Year, int Day, float Hour) Snapshot() => (Year, Day, Hour);
+
+    public float HoursSince(int year, int day, float hour)
+    {
+        var now  = Year * 720f + Day * 24f + Hour;
+        var then = year * 720f + day * 24f + hour;
+        return now - then;
     }
 
     public string Display() =>

@@ -10,13 +10,24 @@ public class MainMenuScreen : Screen
 {
     private readonly string[] _options = { "New Game", "Load Game", "Exit" };
     private int _selected = 0;
+
     private bool _prevDown, _prevUp, _prevEnter;
+    private bool _firstFrame = true;
 
     public MainMenuScreen(GameState state, SpriteFont font) : base(state, font) { }
 
     public override void Update(GameTime gameTime)
     {
         var k = Keyboard.GetState();
+
+        if (_firstFrame)
+        {
+            _prevDown   = k.IsKeyDown(Keys.Down);
+            _prevUp     = k.IsKeyDown(Keys.Up);
+            _prevEnter  = k.IsKeyDown(Keys.Enter);
+            _firstFrame = false;
+            return;
+        }
 
         if (k.IsKeyDown(Keys.Down) && !_prevDown)  _selected = (_selected + 1) % _options.Length;
         if (k.IsKeyDown(Keys.Up)   && !_prevUp)    _selected = (_selected - 1 + _options.Length) % _options.Length;

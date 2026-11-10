@@ -22,8 +22,8 @@ public class CharacterCreationScreen : Screen
     private readonly List<int> _selectedTraits = new();
     private int _traitCursor = 0;
 
-    // Input edge-detection so each keypress registers once
     private KeyboardState _prev;
+    private bool _firstFrame = true;
 
     public CharacterCreationScreen(GameState state, SpriteFont font) : base(state, font) { }
 
@@ -31,18 +31,24 @@ public class CharacterCreationScreen : Screen
     {
         var k = Keyboard.GetState();
 
+        if (_firstFrame)
+        {
+            _prev = k;
+            _firstFrame = false;
+            return;
+        }
+
         switch (_step)
         {
-            case Step.Name:     HandleNameInput(k);     break;
-            case Step.Gender:   HandleGenderInput(k);   break;
-            case Step.Traits:   HandleTraitInput(k);    break;
-            case Step.Confirm:  HandleConfirmInput(k);  break;
+            case Step.Name:    HandleNameInput(k);    break;
+            case Step.Gender:  HandleGenderInput(k);  break;
+            case Step.Traits:  HandleTraitInput(k);   break;
+            case Step.Confirm: HandleConfirmInput(k); break;
         }
 
         _prev = k;
     }
 
-    // ---- NAME STEP --------------------------------------------------------
     private void HandleNameInput(KeyboardState k)
     {
         foreach (var key in k.GetPressedKeys())
@@ -53,6 +59,8 @@ public class CharacterCreationScreen : Screen
                 _name = _name[..^1];
             else if (key == Keys.Enter && _name.Length >= 2)
                 _step = Step.Gender;
+            else if (key == Keys.Escape)
+                State.CurrentScreen = GameScreen.MainMenu;
             else
             {
                 var ch = KeyToChar(key, k);
@@ -62,16 +70,14 @@ public class CharacterCreationScreen : Screen
         }
     }
 
-    // ---- GENDER STEP ------------------------------------------------------
     private void HandleGenderInput(KeyboardState k)
     {
         if (k.IsKeyDown(Keys.Left)  && !_prev.IsKeyDown(Keys.Left))  _genderIndex = (_genderIndex - 1 + _genders.Length) % _genders.Length;
         if (k.IsKeyDown(Keys.Right) && !_prev.IsKeyDown(Keys.Right)) _genderIndex = (_genderIndex + 1) % _genders.Length;
         if (k.IsKeyDown(Keys.Enter) && !_prev.IsKeyDown(Keys.Enter)) _step = Step.Traits;
-        if (k.IsKeyDown(Keys.Escape))                                 _step = Step.Name;
+        if (k.IsKeyDown(Keys.Escape))                                _step = Step.Name;
     }
 
-    // ---- TRAITS STEP ------------------------------------------------------
     private void HandleTraitInput(KeyboardState k)
     {
         if (k.IsKeyDown(Keys.Down) && !_prev.IsKeyDown(Keys.Down))
@@ -91,7 +97,6 @@ public class CharacterCreationScreen : Screen
             _step = Step.Gender;
     }
 
-    // ---- CONFIRM STEP -----------------------------------------------------
     private void HandleConfirmInput(KeyboardState k)
     {
         if (k.IsKeyDown(Keys.Enter) && !_prev.IsKeyDown(Keys.Enter))
@@ -103,11 +108,11 @@ public class CharacterCreationScreen : Screen
             State.Player = player;
             State.CurrentScreen = GameScreen.InGame;
         }
+
         if (k.IsKeyDown(Keys.Escape))
             _step = Step.Traits;
     }
 
-    // ---- RENDER -----------------------------------------------------------
     public override void Draw(SpriteBatch spriteBatch, GraphicsDevice gd)
     {
         gd.Clear(new Color(20, 20, 30));
@@ -116,17 +121,14 @@ public class CharacterCreationScreen : Screen
         spriteBatch.DrawString(Font, "CREATE YOUR CHARACTER", new Vector2(x, y), Color.White);
         y += 60;
 
-        // Name
         var nameColor = _step == Step.Name ? Color.LightGreen : Color.Gray;
         spriteBatch.DrawString(Font, $"Name: {_name}_", new Vector2(x, y), nameColor);
         y += 40;
 
-        // Gender
         var genderColor = _step == Step.Gender ? Color.LightGreen : Color.Gray;
         spriteBatch.DrawString(Font, $"Gender: < {_genders[_genderIndex]} >", new Vector2(x, y), genderColor);
         y += 40;
 
-        // Traits
         var traitHeader = _step == Step.Traits ? Color.LightGreen : Color.Gray;
         spriteBatch.DrawString(Font, "Traits (pick 1-3, Space to toggle):", new Vector2(x, y), traitHeader);
         y += 30;
@@ -143,11 +145,10 @@ public class CharacterCreationScreen : Screen
         }
 
         y += 30;
-        spriteBatch.DrawString(Font, "Press Enter to confirm, Esc to go back",
+        spriteBatch.DrawString(Font, "Enter = next   Esc = back / cancel",
             new Vector2(x, y), Color.DarkGray);
     }
 
-    // ---- INPUT HELPERS ----------------------------------------------------
     private static char? KeyToChar(Keys key, KeyboardState state)
     {
         bool shift = state.IsKeyDown(Keys.LeftShift) || state.IsKeyDown(Keys.RightShift);

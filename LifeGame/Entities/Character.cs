@@ -1,18 +1,24 @@
+#nullable enable
+
 using System.Collections.Generic;
 
 namespace LifeGame.Entities;
 
-public enum Personality { Friendly, Ambitious, Lazy, Creative, Shy, Confident, Funny, Serious, Adventurous, Introverted }
+public enum Personality
+{
+    Friendly, Ambitious, Lazy, Creative, Shy,
+    Confident, Funny, Serious, Adventurous, Introverted
+}
 
 public class Character
 {
     public string Name { get; set; } = "Unnamed";
     public int Age { get; set; } = 18;
-    public string Gender { get; set; } = "Unknown";
+    public string Gender { get; set; } = "Female";
     public List<Personality> Traits { get; } = new();
-
     public Needs Needs { get; } = new();
     public decimal Money { get; set; } = 500m;
+    public Job? Job { get; set; }
 
     public Dictionary<string, int> Skills { get; } = new()
     {
@@ -24,11 +30,11 @@ public class Character
 
 public class Needs
 {
-    public float Hunger { get; set; } = 100f;      // 0..100
-    public float Energy { get; set; } = 100f;
+    public float Hunger  { get; set; } = 100f;
+    public float Energy  { get; set; } = 100f;
     public float Hygiene { get; set; } = 100f;
-    public float Social { get; set; } = 100f;
-    public float Fun { get; set; } = 100f;
+    public float Social  { get; set; } = 100f;
+    public float Fun     { get; set; } = 100f;
 
     public void Tick(float hoursElapsed)
     {
@@ -39,5 +45,5 @@ public class Needs
         Fun     = Clamp(Fun     - 2f * hoursElapsed);
     }
 
-    private static float Clamp(float v) => v < 0 ? 0 : v > 100 ? 100 : v;
+    private static float Clamp(float v) => v < 0f ? 0f : v > 100f ? 100f : v;
 }

@@ -11,7 +11,12 @@ public class LoadGameScreen : Screen
 {
     private List<string> _slots = new();
     private int _cursor = 0;
+
+    private string _error = "";
+    private float _errorTimer = 0f;
+
     private KeyboardState _prev;
+    private bool _firstFrame = true;
 
     public LoadGameScreen(GameState state, SpriteFont font) : base(state, font)
     {
@@ -27,6 +32,20 @@ public class LoadGameScreen : Screen
     public override void Update(GameTime gameTime)
     {
         var k = Keyboard.GetState();
+        var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+        if (_errorTimer > 0f)
+        {
+            _errorTimer -= dt;
+            if (_errorTimer <= 0f) _error = "";
+        }
+
+        if (_firstFrame)
+        {
+            _prev = k;
+            _firstFrame = false;
+            return;
+        }
 
         if (_slots.Count > 0)
         {
@@ -38,14 +57,36 @@ public class LoadGameScreen : Screen
 
             if (k.IsKeyDown(Keys.Enter) && !_prev.IsKeyDown(Keys.Enter))
             {
-                SaveSystem.Load(_slots[_cursor], State);
-                // Load() itself sets CurrentScreen = InGame
+                var slot = _slots[_cursor];
+                var result = SaveSystem.Load(slot, State);
+                if (result != LoadResult.Success)
+                {
+                    _error = result switch
+                    {
+                        LoadResult.NotFound    => $"'{slot}' no longer exists.",
+                        LoadResult.Corrupt     => $"'{slot}' is corrupt and cannot be loaded.",
+                        LoadResult.InvalidData => $"'{slot}' is missing required data.",
+                        _                      => "Load failed."
+                    };
+                    _errorTimer = 4f;
+                    Refresh();
+                }
             }
 
             if (k.IsKeyDown(Keys.Delete) && !_prev.IsKeyDown(Keys.Delete))
             {
-                SaveSystem.Delete(_slots[_cursor]);
-                Refresh();
+                var slot = _slots[_cursor];
+                if (SaveSystem.Delete(slot))
+                {
+                    Refresh();
+                    _error = $"Deleted '{slot}'.";
+                    _errorTimer = 2f;
+                }
+                else
+                {
+                    _error = "Delete failed (see console).";
+                    _errorTimer = 3f;
+                }
             }
         }
 
@@ -65,17 +106,22 @@ public class LoadGameScreen : Screen
         {
             spriteBatch.DrawString(Font, "No saves found. Press Esc to go back.",
                 new Vector2(60, 120), Color.Gray);
-            return;
         }
-
-        for (int i = 0; i < _slots.Count; i++)
+        else
         {
-            var color  = i == _cursor ? Color.LightGreen : Color.Gray;
-            var prefix = i == _cursor ? "> " : "  ";
-            spriteBatch.DrawString(Font, prefix + _slots[i], new Vector2(60, 120 + i * 30), color);
+            for (int i = 0; i < _slots.Count; i++)
+            {
+                var color  = i == _cursor ? Color.LightGreen : Color.Gray;
+                var prefix = i == _cursor ? "> " : "  ";
+                spriteBatch.DrawString(Font, prefix + _slots[i], new Vector2(60, 120 + i * 30), color);
+            }
         }
 
         spriteBatch.DrawString(Font, "Enter = Load   Delete = Delete   Esc = Back",
             new Vector2(60, gd.Viewport.Height - 60), Color.DarkGray);
+
+        if (!string.IsNullOrEmpty(_error))
+            spriteBatch.DrawString(Font, _error,
+                new Vector2(60, gd.Viewport.Height - 30), Color.OrangeRed);
     }
 }
