@@ -14,7 +14,6 @@ public class CareerSystem
     {
         if (_state.Player is null) return false;
         if (_state.Player.Job is not null) return false;
-
         _state.Player.Job = new Job(career);
         return true;
     }
@@ -70,6 +69,6 @@ public class CareerSystem
                 job.ApplyPromotion(newRank);
         }
 
-        Console.WriteLine($"[Career] Shift ended — earned ${pay:0}, {job.Career.PrimarySkill} +1");
+        Console.WriteLine($"[Career] Shift ended - earned ${pay:0}, {job.Career.PrimarySkill} +1");
     }
 }

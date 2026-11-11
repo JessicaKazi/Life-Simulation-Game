@@ -1,5 +1,3 @@
-#nullable enable
-
 using LifeGame.Entities;
 using LifeGame.Systems;
 
@@ -11,7 +9,8 @@ public enum Screen
     CharacterCreation,
     LoadGame,
     InGame,
-    JobBoard
+    JobBoard,
+    HomeBoard
 }
 
 public class GameState

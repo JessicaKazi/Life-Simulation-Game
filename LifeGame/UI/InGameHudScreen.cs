@@ -1,5 +1,3 @@
-#nullable enable
-
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,8 +11,6 @@ namespace LifeGame.UI;
 
 public class InGameHudScreen : Screen
 {
-    private readonly Texture2D _pixel;
-
 #if DEBUG
     private const float AutosaveInterval = 10f;
 #else
@@ -22,6 +18,8 @@ public class InGameHudScreen : Screen
 #endif
 
     private readonly CareerSystem _career;
+    private readonly HomeSystem _home;
+    private readonly Texture2D _pixel;
 
     private float _autosaveTimer = 0f;
     private float _sinceLastSave = 0f;
@@ -33,10 +31,18 @@ public class InGameHudScreen : Screen
     private KeyboardState _prev;
     private bool _firstFrame = true;
 
-    public InGameHudScreen(GameState state, SpriteFont font, Texture2D pixel) : base(state, font)
+    public InGameHudScreen(GameState state, SpriteFont font) : base(state, font)
     {
         _career = new CareerSystem(state);
-        _pixel = pixel;
+        _home = new HomeSystem(state);
+
+        _pixel = new Texture2D(MonoGameGlobal.GraphicsDevice!, 1, 1);
+        _pixel.SetData(new[] { Color.White });
+
+        _home.OnRentPaid += (home, amount) =>
+            ShowStatus($"Rent paid: ${amount:0} to {home.Address}", true);
+        _home.OnEvicted += home =>
+            ShowStatus($"EVICTED from {home.Address}! You couldn't pay rent.", false);
     }
 
     public override void Update(GameTime gameTime)
@@ -59,6 +65,7 @@ public class InGameHudScreen : Screen
             State.Player.Needs.Tick(gameHoursElapsed);
 
         _career.Tick(gameHoursElapsed);
+        _home.Tick();
 
         _autosaveTimer += dt;
         _sinceLastSave += dt;
@@ -93,6 +100,9 @@ public class InGameHudScreen : Screen
         if (k.IsKeyDown(Keys.J) && !_prev.IsKeyDown(Keys.J))
             State.CurrentScreen = GameScreen.JobBoard;
 
+        if (k.IsKeyDown(Keys.H) && !_prev.IsKeyDown(Keys.H))
+            State.CurrentScreen = GameScreen.HomeBoard;
+
         if (k.IsKeyDown(Keys.Q) && !_prev.IsKeyDown(Keys.Q))
         {
             if (State.Player?.Job is not null)
@@ -111,7 +121,7 @@ public class InGameHudScreen : Screen
     private void ShowStatus(string msg, bool success)
     {
         _status = msg;
-        _statusColor = success ? Color.LightGreen : Color.Red;
+        _statusColor = success ? Color.LightGreen : Color.OrangeRed;
         _statusTimer = 3f;
     }
 
@@ -122,11 +132,12 @@ public class InGameHudScreen : Screen
 
         var p = State.Player;
 
-        spriteBatch.DrawString(Font, $"Life.exe — {State.Time.Display()}", new Vector2(20, 20), Color.White);
+        spriteBatch.DrawString(Font, $"Life.exe - {State.Time.Display()}", new Vector2(20, 20), Color.White);
         spriteBatch.DrawString(Font, $"{p.Name} ({p.Gender})  |  ${p.Money:0}",
             new Vector2(20, 50), Color.LightGreen);
 
         DrawCareerPanel(spriteBatch, gd, p.Job);
+        DrawHomePanel(spriteBatch, gd, p.Home, p.DaysSinceRentPaid, p.DaysBetweenRentPayments);
 
         int y = 90;
         DrawBar(spriteBatch, "Hunger",  p.Needs.Hunger,  y, Color.Orange);        y += 28;
@@ -139,7 +150,7 @@ public class InGameHudScreen : Screen
             new Vector2(20, y), Color.LightGray);
         y += 40;
 
-        spriteBatch.DrawString(Font, "J = Job Board   Q = Quit Job   F5 = Save   Esc = Main Menu",
+        spriteBatch.DrawString(Font, "J = Jobs   H = Home   Q = Quit Job   F5 = Save   Esc = Menu",
             new Vector2(20, gd.Viewport.Height - 60), Color.DarkGray);
 
         var remaining = AutosaveInterval - _autosaveTimer;
@@ -176,6 +187,28 @@ public class InGameHudScreen : Screen
             sb.DrawString(Font, "ON SHIFT", new Vector2(x, y), Color.Cyan);
         else
             sb.DrawString(Font, "Off shift", new Vector2(x, y), Color.DarkGray);
+    }
+
+    private void DrawHomePanel(SpriteBatch sb, GraphicsDevice gd, Home? home, int daysSinceRentPaid, int daysBetween)
+    {
+        var x = gd.Viewport.Width - 320;
+        var y = 190;
+
+        sb.DrawString(Font, "HOME", new Vector2(x, y), Color.White);
+        y += 26;
+
+        if (home is null)
+        {
+            sb.DrawString(Font, "Homeless", new Vector2(x, y), Color.Gray);
+            sb.DrawString(Font, "Press H to find a home.", new Vector2(x, y + 22), Color.DarkGray);
+            return;
+        }
+
+        var daysLeft = daysBetween - daysSinceRentPaid;
+        sb.DrawString(Font, home.Address, new Vector2(x, y), Color.LightGreen); y += 22;
+        sb.DrawString(Font, home.District.Name, new Vector2(x, y), Color.LightGray); y += 22;
+        sb.DrawString(Font, $"${home.WeeklyRent}/week", new Vector2(x, y), Color.Yellow); y += 22;
+        sb.DrawString(Font, $"Next rent in {daysLeft} day(s)", new Vector2(x, y), Color.Cyan);
     }
 
     private void DrawBar(SpriteBatch sb, string label, float raw, int y, Color color)

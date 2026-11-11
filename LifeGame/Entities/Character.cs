@@ -1,5 +1,3 @@
-#nullable enable
-
 using System.Collections.Generic;
 
 namespace LifeGame.Entities;
@@ -19,6 +17,9 @@ public class Character
     public Needs Needs { get; } = new();
     public decimal Money { get; set; } = 500m;
     public Job? Job { get; set; }
+    public Home? Home { get; set; }
+    public int DaysSinceRentPaid { get; set; } = 0;
+    public int DaysBetweenRentPayments { get; } = 7;
 
     public Dictionary<string, int> Skills { get; } = new()
     {

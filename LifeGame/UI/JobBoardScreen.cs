@@ -49,7 +49,7 @@ public class JobBoardScreen : Screen
         {
             if (State.Player?.Job is not null)
             {
-                ShowStatus("You already have a job. Quit it first.", false);
+                ShowStatus("You already have a job. Quit it first (Q).", false);
             }
             else
             {
@@ -93,7 +93,30 @@ public class JobBoardScreen : Screen
 
             spriteBatch.DrawString(Font, $"   Shift: {c.ShiftStartHour:00}:00-{c.ShiftEndHour:00}:00  |  Skill: {c.PrimarySkill}",
                 new Vector2(60, y), isCursor ? Color.LightGray : Color.DarkGray);
-            y += 32;   
+            y += 32;
         }
+
+        if (_careers.Count > 0)
+        {
+            var sel = _careers[_cursor];
+            var panelX = 700;
+            spriteBatch.DrawString(Font, sel.Title, new Vector2(panelX, 150), Color.White);
+            spriteBatch.DrawString(Font, sel.Description, new Vector2(panelX, 190), Color.LightGray);
+            spriteBatch.DrawString(Font, $"Pay: {sel.BaseHourlyWage:0}/hr + 25% per rank", new Vector2(panelX, 240), Color.Yellow);
+            spriteBatch.DrawString(Font, "Rank ladder:", new Vector2(panelX, 280), Color.LightGray);
+
+            var ranks = new[] { "Entry", "Junior", "Experienced", "Senior", "Manager", "Executive" };
+            for (int r = 0; r < ranks.Length; r++)
+            {
+                spriteBatch.DrawString(Font, $"  {r + 1}. {ranks[r]}", new Vector2(panelX, 310 + r * 22), Color.Gray);
+            }
+        }
+
+        spriteBatch.DrawString(Font, "Enter = Accept    Esc = Back",
+            new Vector2(60, gd.Viewport.Height - 60), Color.DarkGray);
+
+        if (!string.IsNullOrEmpty(_status))
+            spriteBatch.DrawString(Font, _status,
+                new Vector2(60, gd.Viewport.Height - 30), _statusColor);
     }
 }

@@ -8,7 +8,7 @@
       "Ambitious",
       "Lazy"
     ],
-    "Money": 500,
+    "Money": 410,
     "Skills": {
       "Cooking": 0,
       "Programming": 0,
@@ -20,22 +20,20 @@
       "Fishing": 0
     },
     "Needs": {
-      "Hunger": 96.10913,
-      "Energy": 97.08185,
-      "Hygiene": 98.054565,
-      "Social": 98.540924,
-      "Fun": 98.054565
+      "Hunger": 86.09155,
+      "Energy": 88.94586,
+      "Hygiene": 93.04578,
+      "Social": 94.78433,
+      "Fun": 93.04578
     },
-    "Job": {
-      "CareerTitle": "Programmer",
-      "Rank": "EntryLevel",
-      "ShiftsWorked": 0
-    }
+    "Job": null,
+    "HomeAddress": "Old Town Studio",
+    "DaysSinceRentPaid": 0
   },
   "Time": {
     "Year": 1,
     "Day": 1,
-    "Hour": 6.9727073
+    "Hour": 9.477126
   },
-  "SavedAt": "2026-11-10 19:22:06"
+  "SavedAt": "2026-11-11 10:39:32"
 }

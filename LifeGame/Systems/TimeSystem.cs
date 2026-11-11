@@ -1,5 +1,3 @@
-#nullable enable
-
 namespace LifeGame.Systems;
 
 public class TimeSystem

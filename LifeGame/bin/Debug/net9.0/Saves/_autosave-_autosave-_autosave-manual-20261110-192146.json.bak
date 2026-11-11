@@ -1,0 +1,43 @@
+{
+  "Player": {
+    "Name": "jdndjnv",
+    "Age": 18,
+    "Gender": "Female",
+    "Traits": [
+      "Friendly",
+      "Ambitious",
+      "Lazy"
+    ],
+    "Money": 410,
+    "Skills": {
+      "Cooking": 0,
+      "Programming": 0,
+      "Fitness": 0,
+      "Creativity": 0,
+      "Charisma": 0,
+      "Logic": 0,
+      "Handiness": 0,
+      "Fishing": 0
+    },
+    "Needs": {
+      "Hunger": 87.42578,
+      "Energy": 90.28125,
+      "Hygiene": 93.71289,
+      "Social": 95.28467,
+      "Fun": 93.71289
+    },
+    "Job": {
+      "CareerTitle": "Programmer",
+      "Rank": "EntryLevel",
+      "ShiftsWorked": 0
+    },
+    "HomeAddress": "Old Town Studio",
+    "DaysSinceRentPaid": 0
+  },
+  "Time": {
+    "Year": 1,
+    "Day": 1,
+    "Hour": 9.143531
+  },
+  "SavedAt": "2026-11-11 10:39:22"
+}

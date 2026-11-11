@@ -1,5 +1,3 @@
-#nullable enable
-
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -41,6 +39,8 @@ public static class SaveSystem
         public Dictionary<string, int> Skills { get; set; } = new();
         public NeedsDto Needs { get; set; } = new();
         public JobDto? Job { get; set; }
+        public string? HomeAddress { get; set; }
+        public int DaysSinceRentPaid { get; set; }
     }
 
     private class JobDto
@@ -191,7 +191,9 @@ public static class SaveSystem
             CareerTitle  = c.Job.Career.Title,
             Rank         = c.Job.Rank,
             ShiftsWorked = c.Job.ShiftsWorked
-        }
+        },
+        HomeAddress       = c.Home?.Address,
+        DaysSinceRentPaid = c.DaysSinceRentPaid
     };
 
     private static Character FromDto(PlayerDto d)
@@ -219,6 +221,15 @@ public static class SaveSystem
             if (career is not null)
                 c.Job = new Job(career, d.Job.Rank, d.Job.ShiftsWorked);
         }
+
+        if (!string.IsNullOrEmpty(d.HomeAddress))
+        {
+            var home = Home.Listings.FirstOrDefault(x => x.Address == d.HomeAddress);
+            if (home is not null)
+                c.Home = home;
+        }
+
+        c.DaysSinceRentPaid = d.DaysSinceRentPaid;
 
         return c;
     }
