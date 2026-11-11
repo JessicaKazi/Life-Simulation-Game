@@ -7,10 +7,14 @@
     <UseKerning>true</UseKerning>
     <Style>Regular</Style>
     <CharacterRegions>
-      <CharacterRegion>
-        <Start>32</Start>
-        <End>126</End>
-      </CharacterRegion>
-    </CharacterRegions>
+  <CharacterRegion>
+    <Start>&#32;</Start>
+    <End>&#126;</End>
+  </CharacterRegion>
+  <CharacterRegion>
+    <Start>&#8192;</Start>     <!-- U+2000 -->
+    <End>&#8303;</End>          <!-- U+206F -->
+  </CharacterRegion>
+</CharacterRegions>
   </Asset>
 </XnaContent>
